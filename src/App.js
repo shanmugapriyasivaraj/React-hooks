@@ -61,47 +61,100 @@
 
 // export default App;
 
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
+// import "./App.css";
+
+// const App = () => {
+//   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+//   const [name, setName] = useState("");
+
+//   // On every Render
+//   useEffect(() => {
+//     console.log("I re-rendered");
+//   });
+
+//   // On first Render/Mount Only
+//   useEffect(() => {
+//     console.log(" The component mounted");
+//   });
+
+//   // On first render+ whenever dependency changes
+
+//   useEffect(() => {
+//     console.log(`The name changed:${name}`);
+//   }, [name]);
+
+//   // component will unmount
+//   useEffect(() => {
+//     window.addEventListener("resize", setWindowWidth);
+//   });
+
+//   return (
+//     <div className="app">
+//       <center>
+//         <h1>USE EFFECT</h1>
+//         <h2>The Window Width is : {windowWidth}</h2>
+//         <input
+//           value={name}
+//           onChange={(e) => setName(e.target.value)}
+//           placeholder="Enter a Name"
+//         />
+//       </center>
+//     </div>
+//   );
+// };
+
+// export default App;
+
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-const App = () => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+function App() {
+  const [flag, setFlag] = useState(true);
   const [name, setName] = useState("");
+  const [count, setCount] = useState(0);
+  const inputElement = useRef("");
+  const previousCountRef = useRef("");
 
-  // On every Render
-  useEffect(() => {
-    console.log("I re-rendered");
-  });
-
-  // On first Render/Mount Only
-  useEffect(() => {
-    console.log(" The component mounted");
-  });
-
-  // On first render+ whenever dependency changes
+  console.log(inputElement);
 
   useEffect(() => {
-    console.log(`The name changed:${name}`);
-  }, [name]);
+    previousCountRef.current = count;
+  }, [count]);
 
-  // component will unmount
-  useEffect(() => {
-    window.addEventListener("resize", setWindowWidth);
-  });
+  const resetInput = () => {
+    setName("");
+    inputElement.current.focus();
+    console.log(inputElement.current.value);
+    inputElement.current.value = "priya";
+  };
 
   return (
-    <div className="app">
-      <center>
-        <h1>USE EFFECT</h1>
-        <h2>The Window Width is : {windowWidth}</h2>
+    <div className="App">
+      <div>
+        <button onClick={() => setFlag(!flag)}>Toggle class component </button>
         <input
+          ref={inputElement}
+          name="name"
+          autoComplete="off"
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter a Name"
-        />
-      </center>
+        ></input>
+        <button onClick={resetInput}>Reset</button>
+      </div>
+      <div>My name is {name}</div>
+      <div>
+        <h1>Random Counter:{count}</h1>
+        {typeof previousCountRef.current !== "undefined" && (
+          <h2>Previous Count : {previousCountRef.current}</h2>
+        )}
+        <button onClick={(e) => setCount(Math.ceil(Math.random() * 100))}>
+          Generate Number
+        </button>
+      </div>
     </div>
   );
-};
+}
 
 export default App;
